@@ -1,0 +1,736 @@
+<FluentXMLReport>
+<version>
+Fluent
+Version: 3d, dp, pbns, ske, transient (3d, double precision, pressure-based, standard k-epsilon, transient)
+Release: 26.1.0
+Title: 
+</version>
+
+<Models>
+
+Models
+------
+
+   Model                        Settings                              
+   ----------------------------------------------------------------
+   Space                        3D                                    
+   Time                         Unsteady, 1st-Order Implicit          
+   Viscous                      Standard k-epsilon turbulence model   
+   Wall Treatment               Enhanced Wall Treatment               
+   Heat Transfer                Enabled                               
+   Solidification and Melting   Enabled                               
+   Radiation                    None                                  
+   Species                      Disabled                              
+   Coupled Dispersed Phase      Disabled                              
+   NOx Pollutants               Disabled                              
+   SOx Pollutants               Disabled                              
+   Soot                         Disabled                              
+   Mercury Pollutants           Disabled                              
+   Structure                    Disabled                              
+   Acoustics                    Disabled                              
+   Eulerian Wall Film           Disabled                              
+   Potential/Electrochemistry   Disabled                              
+   Multiphase                   Disabled                              
+
+</Models>
+
+<MaterialProperties>
+Material Properties
+-------------------
+
+   Material: copper (solid)
+
+      Property               Units      Method     Value(s)   
+      -----------------------------------------------------
+      Density                kg/m^3     constant   8978       
+      Cp (Specific Heat)     J/(kg K)   constant   381        
+      Thermal Conductivity   W/(m K)    constant   387.6      
+
+   Material: lithium-battery (solid)
+
+      Property               Units      Method     Value(s)   
+      -----------------------------------------------------
+      Density                kg/m^3     constant   2879       
+      Cp (Specific Heat)     J/(kg K)   constant   880        
+      Thermal Conductivity   W/(m K)    constant   0.743      
+
+   Material: air (fluid)
+
+      Property                    Units      Method     Value(s)     
+      ------------------------------------------------------------
+      Density                     kg/m^3     constant   1.225        
+      Cp (Specific Heat)          J/(kg K)   constant   1006.43      
+      Thermal Conductivity        W/(m K)    constant   0.0242       
+      Viscosity                   kg/(m s)   constant   1.7894e-05   
+      Pure Solvent Melting Heat   J/kg       constant   0            
+      Solidus Temperature         K          constant   0            
+      Liquidus Temperature        K          constant   0            
+
+   Material: pcm-liquid (fluid)
+
+      Property                    Units      Method     Value(s)   
+      ----------------------------------------------------------
+      Density                     kg/m^3     constant   870        
+      Cp (Specific Heat)          J/(kg K)   constant   2570       
+      Thermal Conductivity        W/(m K)    constant   0.16       
+      Viscosity                   kg/(m s)   constant   0.00137    
+      Pure Solvent Melting Heat   J/kg       constant   171000     
+      Solidus Temperature         K          constant   306        
+      Liquidus Temperature        K          constant   307        
+
+   Material: pcm-solid (solid)
+
+      Property               Units      Method     Value(s)   
+      -----------------------------------------------------
+      Density                kg/m^3     constant   900        
+      Cp (Specific Heat)     J/(kg K)   constant   2570       
+      Thermal Conductivity   W/(m K)    constant   0.2        
+
+</MaterialProperties>
+
+<CellZoneConditions>
+Cell Zone Conditions
+--------------------
+
+   Zones
+
+      name     id   type    material          
+      -------------------------------------
+      pcm      9    fluid   pcm-liquid        
+      fluid    7    fluid   air               
+      cell     8    solid   lithium-battery   
+      casing   10   solid   copper            
+
+   Setup Conditions
+
+      pcm
+
+         Condition       Value        
+         --------------------------
+         Material Name   pcm-liquid   
+         Frame Motion?   no           
+         Mesh Motion?    no           
+
+      fluid
+
+         Condition       Value   
+         ---------------------
+         Material Name   air     
+         Frame Motion?   no      
+         Mesh Motion?    no      
+
+      cell
+
+         Condition               Value                                                         
+         -----------------------------------------------------------------------------------
+         Material Name           lithium-battery                                               
+         Specify source terms?   yes                                                           
+         Source Terms            ((energy ((constant . 95000) (inactive . #f) (profile  ))))   
+         Frame Motion?           no                                                            
+         Mesh Motion?            no                                                            
+
+      casing
+
+         Condition       Value    
+         ----------------------
+         Material Name   copper   
+         Frame Motion?   no       
+         Mesh Motion?    no       
+
+</CellZoneConditions>
+
+<BoundaryConditions>
+Boundary Conditions
+-------------------
+
+   Zones
+
+      name                                 id   type              
+      ---------------------------------------------------------
+      wall-43-shadow                       69   wall              
+      wall-43                              43   wall              
+      wall-46-shadow                       68   wall              
+      wall-46                              46   wall              
+      wall-49-shadow                       67   wall              
+      wall-49                              49   wall              
+      wall-52-shadow                       66   wall              
+      wall-52                              52   wall              
+      wall-55-shadow                       65   wall              
+      wall-55                              55   wall              
+      wall-58-shadow                       64   wall              
+      wall-58                              58   wall              
+      wall-40-shadow                       63   wall              
+      wall-40                              40   wall              
+      wall-37-shadow                       62   wall              
+      wall-37                              37   wall              
+      wall-12-shadow                       61   wall              
+      wall-12                              12   wall              
+      wall-60                              60   wall              
+      wall-59                              59   wall              
+      wall-57                              57   wall              
+      wall-56                              56   wall              
+      wall-54                              54   wall              
+      wall-53                              53   wall              
+      wall-51                              51   wall              
+      wall-50                              50   wall              
+      wall-48                              48   wall              
+      wall-47                              47   wall              
+      wall-45                              45   wall              
+      wall-44                              44   wall              
+      wall-42                              42   wall              
+      wall-41                              41   wall              
+      wall-39                              39   wall              
+      wall-38                              38   wall              
+      wall-36                              36   wall              
+      wall-35                              35   wall              
+      wall-fluid                           1    wall              
+      wall-casing                          2    wall              
+      inlet                                13   velocity-inlet    
+      outlet                               14   pressure-outlet   
+      cell_boundary                        15   wall              
+      pcm_boundary                         16   wall              
+      contact_region-src                   17   interface         
+      contact_region-trg                   18   interface         
+      contact_region_2-src                 19   interface         
+      contact_region_2-trg                 20   interface         
+      contact_region_3-src                 21   interface         
+      contact_region_3-trg                 22   interface         
+      cell_boundary-contact_region_4-src   23   interface         
+      pcm_boundary-contact_region_4-trg    24   interface         
+      cell_boundary-contact_region_5-src   25   interface         
+      pcm_boundary-contact_region_5-trg    26   interface         
+      cell_boundary-contact_region_6-src   27   interface         
+      pcm_boundary-contact_region_6-trg    28   interface         
+      pcm_boundary-contact_region_7-src    29   interface         
+      contact_region_7-trg                 30   interface         
+      pcm_boundary-contact_region_8-src    31   interface         
+      contact_region_8-trg                 32   interface         
+      pcm_boundary-contact_region_9-src    33   interface         
+      contact_region_9-trg                 34   interface         
+
+   Setup Conditions
+
+      wall-43-shadow
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              copper            
+         Thermal BC Type            Coupled           
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-43
+
+         Condition         Value     
+         -------------------------
+         Material Name     copper    
+         Thermal BC Type   Coupled   
+
+      wall-46-shadow
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              copper            
+         Thermal BC Type            Coupled           
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-46
+
+         Condition         Value     
+         -------------------------
+         Material Name     copper    
+         Thermal BC Type   Coupled   
+
+      wall-49-shadow
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              copper            
+         Thermal BC Type            Coupled           
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-49
+
+         Condition         Value     
+         -------------------------
+         Material Name     copper    
+         Thermal BC Type   Coupled   
+
+      wall-52-shadow
+
+         Condition         Value     
+         -------------------------
+         Material Name     copper    
+         Thermal BC Type   Coupled   
+
+      wall-52
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              copper            
+         Thermal BC Type            Coupled           
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-55-shadow
+
+         Condition         Value     
+         -------------------------
+         Material Name     copper    
+         Thermal BC Type   Coupled   
+
+      wall-55
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              copper            
+         Thermal BC Type            Coupled           
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-58-shadow
+
+         Condition         Value     
+         -------------------------
+         Material Name     copper    
+         Thermal BC Type   Coupled   
+
+      wall-58
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              copper            
+         Thermal BC Type            Coupled           
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-40-shadow
+
+         Condition         Value       
+         ---------------------------
+         Material Name     pcm-solid   
+         Thermal BC Type   Coupled     
+
+      wall-40
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              pcm-solid         
+         Thermal BC Type            Coupled           
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-37-shadow
+
+         Condition         Value       
+         ---------------------------
+         Material Name     pcm-solid   
+         Thermal BC Type   Coupled     
+
+      wall-37
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              pcm-solid         
+         Thermal BC Type            Coupled           
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-12-shadow
+
+         Condition         Value       
+         ---------------------------
+         Material Name     pcm-solid   
+         Thermal BC Type   Coupled     
+
+      wall-12
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              pcm-solid         
+         Thermal BC Type            Coupled           
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-60
+
+         Condition         Value       
+         ---------------------------
+         Material Name     pcm-solid   
+         Thermal BC Type   Heat Flux   
+
+      wall-59
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              pcm-solid         
+         Thermal BC Type            Heat Flux         
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-57
+
+         Condition         Value       
+         ---------------------------
+         Material Name     pcm-solid   
+         Thermal BC Type   Heat Flux   
+
+      wall-56
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              pcm-solid         
+         Thermal BC Type            Heat Flux         
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-54
+
+         Condition         Value       
+         ---------------------------
+         Material Name     pcm-solid   
+         Thermal BC Type   Heat Flux   
+
+      wall-53
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              pcm-solid         
+         Thermal BC Type            Heat Flux         
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-51
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              pcm-solid         
+         Thermal BC Type            Heat Flux         
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-50
+
+         Condition         Value             
+         ---------------------------------
+         Material Name     lithium-battery   
+         Thermal BC Type   Heat Flux         
+
+      wall-48
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              pcm-solid         
+         Thermal BC Type            Heat Flux         
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-47
+
+         Condition         Value             
+         ---------------------------------
+         Material Name     lithium-battery   
+         Thermal BC Type   Heat Flux         
+
+      wall-45
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              pcm-solid         
+         Thermal BC Type            Heat Flux         
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-44
+
+         Condition         Value             
+         ---------------------------------
+         Material Name     lithium-battery   
+         Thermal BC Type   Heat Flux         
+
+      wall-42
+
+         Condition         Value       
+         ---------------------------
+         Material Name     pcm-solid   
+         Thermal BC Type   Heat Flux   
+
+      wall-41
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              pcm-solid         
+         Thermal BC Type            Heat Flux         
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-39
+
+         Condition         Value       
+         ---------------------------
+         Material Name     pcm-solid   
+         Thermal BC Type   Heat Flux   
+
+      wall-38
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              pcm-solid         
+         Thermal BC Type            Heat Flux         
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-36
+
+         Condition         Value       
+         ---------------------------
+         Material Name     pcm-solid   
+         Thermal BC Type   Heat Flux   
+
+      wall-35
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              pcm-solid         
+         Thermal BC Type            Heat Flux         
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-fluid
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              pcm-solid         
+         Thermal BC Type            Heat Flux         
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      wall-casing
+
+         Condition         Value       
+         ---------------------------
+         Material Name     copper      
+         Thermal BC Type   Heat Flux   
+
+      inlet
+
+         Condition                  Value   
+         --------------------------------
+         Velocity Magnitude [m/s]   0.5     
+
+      outlet
+
+         Condition   Value   
+         -----------------
+
+      cell_boundary
+
+         Condition         Value             
+         ---------------------------------
+         Material Name     lithium-battery   
+         Thermal BC Type   Heat Flux         
+
+      pcm_boundary
+
+         Condition                  Value             
+         ------------------------------------------
+         Material Name              pcm-solid         
+         Thermal BC Type            Heat Flux         
+         Wall Motion                Stationary Wall   
+         Shear Boundary Condition   No Slip           
+
+      contact_region-src
+
+         Condition   Value     
+         -------------------
+                     wall-35   
+
+      contact_region-trg
+
+         Condition   Value     
+         -------------------
+                     wall-36   
+
+      contact_region_2-src
+
+         Condition   Value     
+         -------------------
+                     wall-38   
+
+      contact_region_2-trg
+
+         Condition   Value     
+         -------------------
+                     wall-39   
+
+      contact_region_3-src
+
+         Condition   Value     
+         -------------------
+                     wall-41   
+
+      contact_region_3-trg
+
+         Condition   Value     
+         -------------------
+                     wall-42   
+
+      cell_boundary-contact_region_4-src
+
+         Condition   Value     
+         -------------------
+                     wall-44   
+
+      pcm_boundary-contact_region_4-trg
+
+         Condition   Value     
+         -------------------
+                     wall-45   
+
+      cell_boundary-contact_region_5-src
+
+         Condition   Value     
+         -------------------
+                     wall-47   
+
+      pcm_boundary-contact_region_5-trg
+
+         Condition   Value     
+         -------------------
+                     wall-48   
+
+      cell_boundary-contact_region_6-src
+
+         Condition   Value     
+         -------------------
+                     wall-50   
+
+      pcm_boundary-contact_region_6-trg
+
+         Condition   Value     
+         -------------------
+                     wall-51   
+
+      pcm_boundary-contact_region_7-src
+
+         Condition   Value     
+         -------------------
+                     wall-53   
+
+      contact_region_7-trg
+
+         Condition   Value     
+         -------------------
+                     wall-54   
+
+      pcm_boundary-contact_region_8-src
+
+         Condition   Value     
+         -------------------
+                     wall-56   
+
+      contact_region_8-trg
+
+         Condition   Value     
+         -------------------
+                     wall-57   
+
+      pcm_boundary-contact_region_9-src
+
+         Condition   Value     
+         -------------------
+                     wall-59   
+
+      contact_region_9-trg
+
+         Condition   Value     
+         -------------------
+                     wall-60   
+
+</BoundaryConditions>
+
+<SolverSettings>
+Solver Settings
+---------------
+
+   Equations
+
+      Equation     Solved   
+      -------------------
+      Flow         yes      
+      Turbulence   yes      
+      Energy       yes      
+
+   Numerics
+
+      Numeric                         Enabled   
+      ---------------------------------------
+      Absolute Velocity Formulation   yes       
+
+   Unsteady Calculation Parameters
+
+                                      
+      -----------------------------
+      Number of Time Steps       10   
+      Time Step Size [s]         1    
+      Max Iterations/Time Step   20   
+
+   Under-Relaxation Factors
+
+      Variable                     Relaxation Factor   
+      ----------------------------------------------
+      Pressure                     0.3                 
+      Density                      1                   
+      Body Forces                  1                   
+      Momentum                     0.7                 
+      Turbulent Kinetic Energy     0.8                 
+      Turbulent Dissipation Rate   0.8                 
+      Turbulent Viscosity          1                   
+      Liquid Fraction Update       0.9                 
+      Energy                       1                   
+
+   Linear Solver
+
+      Variable                     Solver Type   Termination Criterion   Residual Reduction Tolerance   
+      -----------------------------------------------------------------------------------------------
+      Pressure                     V-Cycle       0.1                                                    
+      X-Momentum                   Flexible      0.1                     0.7                            
+      Y-Momentum                   Flexible      0.1                     0.7                            
+      Z-Momentum                   Flexible      0.1                     0.7                            
+      Turbulent Kinetic Energy     Flexible      0.1                     0.7                            
+      Turbulent Dissipation Rate   Flexible      0.1                     0.7                            
+      Energy                       F-Cycle       0.1                                                    
+
+   Pressure-Velocity Coupling
+
+      Parameter   Value    
+      ------------------
+      Type        SIMPLE   
+
+   Discretization Scheme
+
+      Variable                     Scheme                
+      ------------------------------------------------
+      Pressure                     Second Order          
+      Momentum                     Second Order Upwind   
+      Turbulent Kinetic Energy     First Order Upwind    
+      Turbulent Dissipation Rate   First Order Upwind    
+      Energy                       Second Order Upwind   
+
+   Solution Limits
+
+      Quantity                                   Limit    
+      -------------------------------------------------
+      Minimum Absolute Pressure [Pa]             1        
+      Maximum Absolute Pressure [Pa]             5e+10    
+      Minimum Static Temperature [K]             1        
+      Maximum Static Temperature [K]             5000     
+      Minimum Turb. Kinetic Energy [m^2/s^2]     1e-14    
+      Minimum Turb. Dissipation Rate [m^2/s^3]   1e-20    
+      Maximum Turb. Viscosity Ratio              100000   
+
+</SolverSettings>
+
+</FluentXMLReport>
